@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur - Jeu de Cartes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="error-card">
+        <h1 class="error-title">⚠️ Une erreur est survenue</h1>
+        <p class="error-message" th:text="${apiError != null ? apiError.message : 'Une erreur inattendue est survenue.'}">
+            Description de l'erreur
+        </p>
+
+        <div th:if="${apiError != null}" style="text-align: left; background: #fff; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-family: monospace; font-size: 0.9rem;">
+            <p><strong>Status HTTP :</strong> <span th:text="${apiError.status}">500</span></p>
+            <p><strong>Erreur :</strong> <span th:text="${apiError.error}">Internal Server Error</span></p>
+            <p><strong>Horodatage :</strong> <span th:text="${apiError.timestamp}">2026-10-15T00:00:00</span></p>
+            <p><strong>Chemin :</strong> <span th:text="${apiError.path}">/random-hand-cards</span></p>
+        </div>
+
+        <a th:href="@{/random-hand-cards}" class="btn-primary">
+            <span>🔄</span>
+            <span>Retourner au jeu de cartes</span>
+        </a>
+    </div>
+</div>
+</body>
+</html>

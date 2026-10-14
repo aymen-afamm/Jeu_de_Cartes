@@ -1,0 +1,296 @@
+/* Style moderne et sobre pour l'application Jeu de Cartes */
+:root {
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --accent-color: #059669;
+    --border-color: #e2e8f0;
+    --red-suit: #dc2626;
+    --black-suit: #1e293b;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.5;
+    padding: 24px 16px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.025em;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+}
+
+.rules-banner {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rules-banner strong {
+    color: #047857;
+}
+
+/* Sections */
+.section-block {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+}
+
+.section-block.random-hand {
+    border-left: 5px solid #f59e0b;
+}
+
+.section-block.sorted-hand {
+    border-left: 5px solid #10b981;
+}
+
+.section-block.full-deck {
+    border-left: 5px solid #6366f1;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-amber {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-green {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-indigo {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+/* Grille des cartes */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+    gap: 16px;
+    justify-items: center;
+}
+
+@media (min-width: 768px) {
+    .cards-grid.hand-grid {
+        grid-template-columns: repeat(10, 1fr);
+        gap: 12px;
+    }
+}
+
+/* Carte de jeu visuelle */
+.card-item {
+    width: 100%;
+    max-width: 110px;
+    aspect-ratio: 2.5 / 3.5;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+}
+
+.card-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: #94a3b8;
+}
+
+.card-item.red {
+    color: var(--red-suit);
+}
+
+.card-item.black {
+    color: var(--black-suit);
+}
+
+.card-corner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.card-corner.top-left {
+    align-self: flex-start;
+}
+
+.card-corner.bottom-right {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
+
+.corner-rank {
+    font-size: 0.95rem;
+}
+
+.corner-symbol {
+    font-size: 0.9rem;
+}
+
+.card-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.center-symbol {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+/* Image réelle si disponible */
+.card-image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+/* Erreurs */
+.error-card {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.error-title {
+    color: #991b1b;
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+.error-message {
+    color: #7f1d1d;
+    margin-bottom: 24px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 48px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
