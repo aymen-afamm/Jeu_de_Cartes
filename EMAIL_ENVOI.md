@@ -25,7 +25,7 @@ Veuillez trouver ci-joint ma réalisation du test technique portant sur la simul
 
 ### Modalités d'accès et d'exécution :
 * Le code source complet et sa documentation détaillée sont inclus dans l'archive jointe `Test_Technique_Jeu_de_Cartes.zip`.
-* Le projet est également consultable sur le dépôt GitHub : [https://github.com/aymen-afamm/jeu-des-carts](https://github.com/aymen-afamm/jeu-des-carts)
+* Le projet est également consultable sur le dépôt GitHub : [https://github.com/aymen-afamm/Jeu_de_Cartes](https://github.com/aymen-afamm/Jeu_de_Cartes)
 * Grâce au Maven Wrapper intégré, l'application peut être compilée, testée et lancée immédiatement sans installation préalable de Maven via les commandes :
   * Exécution des tests : `.\mvnw.cmd clean test` (ou `./mvnw clean test` sous Linux/Mac)
   * Lancement de l'application : `.\mvnw.cmd spring-boot:run` (ou `./mvnw spring-boot:run`)
