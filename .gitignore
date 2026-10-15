@@ -36,3 +36,7 @@ build/
 Thumbs.db
 *.zip
 
+### Local private notes and email drafts ###
+PREPARATION_ENTRETIEN.md
+EMAIL_ENVOI.md
+INTERVIEW_GUIDE.md

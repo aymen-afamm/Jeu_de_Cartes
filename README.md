@@ -70,8 +70,6 @@ card-game/
 ├── pom.xml                                           # Configuration Maven & dépendances
 ├── mvnw / mvnw.cmd / .mvn/                           # Maven Wrapper (exécutable sous Linux/Mac/Windows)
 ├── README.md                                         # Documentation technique et guide de lancement
-├── PREPARATION_ENTRETIEN.md                          # Guide complet de préparation pour l'entretien (débutant)
-├── EMAIL_ENVOI.md                                    # Modèle d'email d'envoi du test technique
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/cardgame/
