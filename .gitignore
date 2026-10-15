@@ -34,3 +34,5 @@ build/
 ### Operating System ###
 .DS_Store
 Thumbs.db
+*.zip
+

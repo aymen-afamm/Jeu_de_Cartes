@@ -1,157 +1,260 @@
-# Jeu de Cartes - Technical Test (Spring Boot)
+# 🃏 Jeu de Cartes - Test Technique (Java / Spring Boot)
 
-Application web développée en Java avec Spring Boot simulant la distribution et le tri d'une main de 10 cartes à jouer, conformément aux spécifications du test technique.
+Application web développée en **Java 17** avec **Spring Boot 3** simulant la génération, le mélange aléatoire, la distribution et le tri d'une main de 10 cartes à jouer, conformément aux spécifications du test technique.
 
 ---
 
-## 1. Fonctionnalités Principales
+## 1. Vue d'Ensemble du Projet
 
-* **Génération automatique du paquet (Pack) :** 52 cartes uniques issues du produit cartésien de 4 couleurs et 13 valeurs.
-* **Mélange aléatoire :** Mélange de cartes sans altération du paquet source.
-* **Tirage d'une main de 10 cartes :** Tirage sans remise garantissant l'absence de doublons.
-* **Tri déterministe :** Tri d'une copie de la main selon la règle métier :
-  1. D'abord par couleur : **Carreau (♦) &rarr; Cœur (♥) &rarr; Pique (♠) &rarr; Trèfle (♣)**
-  2. Puis par valeur : **As &rarr; 2 &rarr; 3 &rarr; ... &rarr; 10 &rarr; Valet &rarr; Dame &rarr; Roi**
-* **Affichage dans l'interface web :**
-  * La main aléatoire (10 cartes non triées)
-  * La main triée (les mêmes 10 cartes triées)
-  * Le paquet complet de 52 cartes
-  * Un bouton **« Générer une nouvelle main »** pour rejouer à volonté.
-* **Double rendu visuel des cartes :**
-  * Fichiers images SVG vectoriels nets (`src/main/resources/static/img/cards/`).
-  * Repli visuel automatique (fallback) en HTML/CSS pur pour garantir qu'aucune image brisée ne s'affiche si les images sont désactivées.
-* **Gestion centralisée des erreurs :** Gestionnaire `@ControllerAdvice` renvoyant une réponse structurée de type `ApiError`.
-* **Endpoint API REST companion :** `GET /api/random-hand-cards` fournissant le résultat structuré en JSON.
+L'application permet de simuler un tirage de cartes de façon interactive et reproductible :
+1. **Création d'un paquet standard (Pack) de 52 cartes uniques**, issu du produit cartésien de 4 couleurs et 13 valeurs.
+2. **Mélange aléatoire** du paquet sans altération du paquet d'origine (algorithme Fisher-Yates via `Collections.shuffle`).
+3. **Distribution d'une main de 10 cartes** (les 10 premières cartes après mélange, sans remise, garanties sans doublon).
+4. **Tri d'une copie indépendante** de la main selon la règle métier :
+   * **1° Par couleur :** Carreau (♦) &rarr; Cœur (♥) &rarr; Pique (♠) &rarr; Trèfle (♣)
+   * **2° Par valeur :** As &rarr; 2 &rarr; 3 &rarr; 4 &rarr; 5 &rarr; 6 &rarr; 7 &rarr; 8 &rarr; 9 &rarr; 10 &rarr; Valet &rarr; Dame &rarr; Roi
+5. **Rendu visuel HTML/CSS moderne et soigné** présentant distinctement :
+   * Le **Paquet Complet de 52 cartes**
+   * La **Main Aléatoire de 10 cartes non triées**
+   * La **Main Triée de 10 cartes**
+   * Un bouton **« 🔄 Générer une nouvelle main »** pour relancer un tirage dynamique côté serveur.
+6. **Gestion centralisée des erreurs** (`@ControllerAdvice`) retournant une réponse structurée de type `ApiError` avec les codes HTTP appropriés (400 ou 500, jamais de faux 200).
+7. **Endpoint API REST companion** (`GET /api/random-hand-cards`) fournissant les données au format JSON structuré.
 
 ---
 
 ## 2. Choix Techniques et Justifications
 
-Conformément aux critères d'évaluation du test technique :
-
 | Composant | Choix technique | Justification |
 | :--- | :--- | :--- |
-| **Langage** | Java 17 LTS | Version moderne, stable et performante, avec syntaxe moderne (`switch`, `record`, typage fort). |
-| **Framework Web** | Spring Boot 3.3.4 (Spring MVC) | Standard de l'industrie pour Java. Permet une séparation nette MVC, l'injection de dépendances et une configuration minimale. |
-| **Moteur de Template** | Thymeleaf | Intégration native avec Spring Boot, rendu côté serveur (SSR) sans framework JavaScript lourd, syntaxe HTML naturelle. |
-| **Build & Dépendances** | Apache Maven | Gestion standard des dépendances, reproductibilité des builds et cycle de vie de test automatisé. |
-| **Tests Unitaires** | JUnit 5 + Spring Boot Test | Écriture de tests unitaires clairs, indépendants et déterministes sur la logique métier et l'API web. |
-| **Modélisation** | Enums `Suit` & `Rank`, Classe `Card`, `Pack` | Utilisation des énumérations Java garantissant l'immutabilité, l'absence de valeurs invalides et un tri naturel ordonné par déclaration (`ordinal`). |
+| **Langage** | **Java 17 LTS** | Version LTS moderne, stable et performante. Typage fort, sécurité mémoire, lisibilité accrue (`switch`, `record`, `Comparator`). |
+| **Framework Web** | **Spring Boot 3.3.4 (Spring MVC)** | Standard industriel incontournable pour le développement Java. Fournit un serveur Tomcat embarqué, l'injection de dépendances et une architecture MVC claire. |
+| **Moteur de Template** | **Thymeleaf** | Intégration native et fluide avec Spring Boot. Permet un rendu côté serveur (SSR) sans complexité JavaScript superflue, avec une syntaxe HTML naturelle. |
+| **Gestionnaire de Build** | **Apache Maven (avec Wrapper `mvnw`)** | Gestion standardisée des dépendances et du cycle de vie (compilation, tests, packaging). Le wrapper garantit que le projet compile immédiatement sans installer Maven manuellement. |
+| **Framework de Test** | **JUnit 5 + Spring Boot Test + MockMvc** | Tests unitaires isolés pour la logique métier et tests d'intégration web pour les contrôleurs et la gestion d'erreurs. |
+| **Modélisation** | **Énumérations Java (`Suit`, `Rank`)** | Sécurité de typage à la compilation (type safety), immutabilité, impossibilité d'avoir une carte invalide, et ordre naturel intrinsèque (`ordinal`). |
 
 ---
 
-## 3. Règle de Tri des Cartes
+## 3. Règle de Tri et Déterminisme
 
-Le tri est effectué selon la règle prescrite dans le sujet :
-1. **Ordre des couleurs :**
-   * **Carreau (♦)**
-   * **Cœur (♥)**
-   * **Pique (♠)**
-   * **Trèfle (♣)**
-2. **Ordre des valeurs (au sein d'une même couleur) :**
-   * **As** (valeur 1)
-   * **2, 3, 4, 5, 6, 7, 8, 9, 10**
-   * **Valet** (valeur 11)
-   * **Dame** (valeur 12)
-   * **Roi** (valeur 13)
+Le tri de la main s'appuie sur une règle stricte et cohérente :
 
-L'implémentation Java repose sur le comparateur standard :
+### Ordre des 4 couleurs :
+1. **Carreau (♦)** (`Suit.CARREAU`)
+2. **Cœur (♥)** (`Suit.COEUR`)
+3. **Pique (♠)** (`Suit.PIQUE`)
+4. **Trèfle (♣)** (`Suit.TREFLE`)
+
+### Ordre des 13 valeurs au sein de chaque couleur :
+**As (1) &rarr; 2 &rarr; 3 &rarr; 4 &rarr; 5 &rarr; 6 &rarr; 7 &rarr; 8 &rarr; 9 &rarr; 10 &rarr; Valet (11) &rarr; Dame (12) &rarr; Roi (13)**
+
+### Implémentation du Comparateur :
 ```java
 Comparator<Card> cardComparator = Comparator
         .comparing(Card::getSuit)
         .thenComparing(Card::getRank);
+
+sorted.sort(cardComparator);
 ```
+La classe `Card` implémente également l'interface `Comparable<Card>` avec cette même logique de comparaison pour assurer un ordre naturel uniforme dans tout le projet.
 
 ---
 
-## 4. Architecture et Organisation du Code
+## 4. Architecture et Séparation des Responsabilités
+
+Le projet applique rigoureusement le principe de responsabilité unique (SRP) :
 
 ```text
 card-game/
-├── pom.xml                                   # Descripteur Maven et dépendances
-├── README.md                                 # Documentation technique
-├── INTERVIEW_GUIDE.md                        # Guide complet de préparation pour l'entretien
+├── pom.xml                                           # Configuration Maven & dépendances
+├── mvnw / mvnw.cmd / .mvn/                           # Maven Wrapper (exécutable sous Linux/Mac/Windows)
+├── README.md                                         # Documentation technique et guide de lancement
+├── PREPARATION_ENTRETIEN.md                          # Guide complet de préparation pour l'entretien (débutant)
+├── EMAIL_ENVOI.md                                    # Modèle d'email d'envoi du test technique
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/cardgame/
-│   │   │   ├── CardGameApplication.java     # Point d'entrée Spring Boot
+│   │   │   ├── CardGameApplication.java             # Point d'entrée Spring Boot (@SpringBootApplication)
 │   │   │   ├── model/
-│   │   │   │   ├── Suit.java                # Enum des 4 couleurs (Carreau, Cœur, Pique, Trèfle)
-│   │   │   │   ├── Rank.java                # Enum des 13 valeurs (As -> Roi)
-│   │   │   │   ├── Card.java                # Modèle d'une carte (Suit, Rank, affichage, comparaison)
-│   │   │   │   ├── Pack.java                # Modèle du paquet de 52 cartes (produit cartésien)
-│   │   │   │   ├── CardGameRound.java       # DTO regroupant paquet complet, main tirée et main triée
-│   │   │   │   └── ApiError.java            # Modèle structuré pour les erreurs centralisées
+│   │   │   │   ├── Suit.java                        # Enum : CARREAU, COEUR, PIQUE, TREFLE
+│   │   │   │   ├── Rank.java                        # Enum : ACE, TWO, ..., KING
+│   │   │   │   ├── Card.java                        # Modèle immuable d'une carte (couleur, valeur, image)
+│   │   │   │   ├── Pack.java                        # Paquet de 52 cartes (produit cartésien 4x13)
+│   │   │   │   ├── CardGameRound.java               # DTO regroupant paquet, main tirée et main triée
+│   │   │   │   └── ApiError.java                    # Modèle d'erreur structurée (status, message, path, timestamp)
 │   │   │   ├── service/
-│   │   │   │   └── CardService.java         # Logique métier : création, mélange, tirage 10 cartes, tri
+│   │   │   │   └── CardService.java                 # Logique métier pure (création, mélange, tirage, tri)
 │   │   │   ├── controller/
-│   │   │   │   ├── CardController.java      # Contrôleur Spring MVC (/random-hand-cards, /, /api/...)
-│   │   │   │   └── GlobalExceptionHandler.java # Gestion centralisée des erreurs (@ControllerAdvice)
+│   │   │   │   ├── CardController.java              # Contrôleur web Spring MVC (endpoints HTTP)
+│   │   │   │   └── GlobalExceptionHandler.java     # Gestion centralisée des exceptions (@ControllerAdvice)
 │   │   │   └── exception/
-│   │   │       └── CardGameException.java   # Exception métier dédiée
+│   │   │       └── CardGameException.java           # Exception métier personnalisée (RuntimeException)
 │   │   └── resources/
-│   │       ├── application.properties       # Configuration de l'application (port 8080)
+│   │       ├── application.properties               # Configuration applicative (port 8080 par défaut)
 │   │       ├── templates/
-│   │       │   ├── random-hand-cards.html   # Vue Thymeleaf principale
-│   │       │   └── error.html               # Vue d'erreur utilisateur
+│   │       │   ├── random-hand-cards.html           # Vue Thymeleaf principale
+│   │       │   └── error.html                       # Vue HTML d'erreur conviviale
 │   │       └── static/
 │   │           ├── css/
-│   │           │   └── style.css            # Styles CSS responsives et soignés
-│   │           └── img/cards/               # 52 cartes vectorielles au format SVG
+│   │           │   └── style.css                    # Feuilles de styles CSS responsives
+│   │           └── img/cards/                       # 52 images SVG des cartes (nommage normalisé)
 │   └── test/
 │       └── java/com/example/cardgame/
 │           ├── service/
-│           │   └── CardServiceTest.java     # 10 tests unitaires complets sur la logique métier
+│           │   └── CardServiceTest.java             # 13 tests unitaires de la logique métier
 │           └── controller/
-│               └── CardControllerTest.java  # Tests d'intégration de la couche web
+│               ├── CardControllerTest.java          # 3 tests d'intégration web (endpoints HTTP)
+│               └── GlobalExceptionHandlerTest.java  # 3 tests d'intégration de la gestion d'erreurs
 ```
+
+### Séparation Service / Contrôleur :
+* **`CardController`** : Reçoit les requêtes HTTP (`GET /random-hand-cards`), appelle le service métier, transmet les données au `Model` Spring MVC et renvoie le nom de la vue (`"random-hand-cards"`). Aucun algorithme de jeu n'est présent dans le contrôleur.
+* **`CardService`** : Contient l'intégralité de la logique métier (création du paquet, mélange aléatoire, tirage sans remise, tri déterministe). Il est totalement indépendant du protocole HTTP et facilement testable unitairement.
 
 ---
 
-## 5. Prérequis
+## 5. Mapping des Images de Cartes
 
-* **Java JDK 17** ou supérieur (`java -version`)
-* **Apache Maven 3.8+** (`mvn -version`)
-* Une connexion Internet lors du tout premier build pour télécharger les dépendances Maven.
+Les 52 images vectorielles SVG sont stockées dans `src/main/resources/static/img/cards/`.
+
+### Convention de nommage :
+Le nom du fichier est calculé de manière déterministe dans `Card.getImageFileName()` :
+$$\text{Nom du fichier} = \text{codeCouleur} + \text{"\_"} + \text{codeValeur} + \text{".svg"}$$
+
+* **Codes couleur (`Suit.getCode()`)** : `carreau`, `coeur`, `pique`, `trefle`
+* **Codes valeur (`Rank.getCode()`)** : `as`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `valet`, `dame`, `roi`
+
+### Exemples :
+* As de Carreau &rarr; `/img/cards/carreau_as.svg`
+* 10 de Pique &rarr; `/img/cards/pique_10.svg`
+* Roi de Cœur &rarr; `/img/cards/coeur_roi.svg`
+* Valet de Trèfle &rarr; `/img/cards/trefle_valet.svg`
+
+### Sécurité visuelle (Fallback CSS) :
+Si une image venait à être indisponible, l'attribut `onerror="this.style.display='none'"` masque l'image et laisse apparaître automatiquement une carte élégante rendue en HTML/CSS pur (valeur dans les coins, symbole central rouge ou noir), évitant tout affichage d'icône d'image brisée.
 
 ---
 
-## 6. Commandes d'Exécution et Tests
+## 6. Prérequis
 
-### Compiler et exécuter les tests unitaires
-```bash
-mvn clean test
+* **Java JDK 17** ou supérieur installé (`java -version`).
+* **Git** (pour le clonage du dépôt).
+* Maven n'a **pas** besoin d'être installé globalement : le projet inclut le wrapper officiel `mvnw` (Linux/Mac) et `mvnw.cmd` (Windows).
+
+---
+
+## 7. Commandes de Compilation, Test et Exécution
+
+Toutes les commandes ci-dessous sont à exécuter depuis la racine du projet (`D:\FlutterProjects\Test_Technique`).
+
+### Sous Windows (PowerShell ou Invite de commandes) :
+
+#### 1. Nettoyer et exécuter tous les tests (19 tests) :
+```cmd
+.\mvnw.cmd clean test
 ```
 
-### Lancer l'application localement
-```bash
-mvn spring-boot:run
+#### 2. Compiler et packager le fichier JAR exécutable :
+```cmd
+.\mvnw.cmd package
 ```
+Le fichier JAR généré se trouve dans : `target/card-game-1.0.0.jar`.
 
-Ou en construisant le JAR exécutable :
-```bash
-mvn clean package
+#### 3. Lancer l'application :
+```cmd
+.\mvnw.cmd spring-boot:run
+```
+Ou directement avec le JAR généré :
+```cmd
 java -jar target/card-game-1.0.0.jar
 ```
 
-### Accéder à l'application dans le navigateur
-* URL principale demandée : **[http://localhost:8080/random-hand-cards](http://localhost:8080/random-hand-cards)**
-* Redirection automatique depuis la racine : **[http://localhost:8080/](http://localhost:8080/)**
-* Endpoint JSON : **[http://localhost:8080/api/random-hand-cards](http://localhost:8080/api/random-hand-cards)**
+### Sous Linux / macOS :
+```bash
+./mvnw clean test
+./mvnw package
+./mvnw spring-boot:run
+```
 
 ---
 
-## 7. Couverture des Tests
+## 8. URLs et Navigation
 
-Les tests unitaires (`CardServiceTest`) et d'intégration (`CardControllerTest`) valident formellement :
-1. La création d'un paquet de **52 cartes exactes**.
-2. L'**unicité stricte** des 52 cartes (aucun doublon).
-3. La présence de **13 cartes par couleur**.
-4. La conservation de toutes les cartes après **mélange aléatoire**.
-5. Le tirage d'une main contenant **exactement 10 cartes**.
-6. L'**unicité des 10 cartes** de la main (tirage sans remise).
-7. Le **respect strict de la règle de tri** (d'abord par couleur, puis par valeur).
-8. La **non-mutation** de la main d'origine et la parfaite conservation des éléments.
-9. La validité de **tirages répétés** successifs.
-10. La levée d'exceptions sur les cas limites (quantités invalides, paquet vide/nul).
-11. Le bon fonctionnement des endpoints web Spring MVC (redirection 3xx, code HTTP 200, format JSON).
+Une fois l'application démarrée :
+
+* **URL principale demandée par le sujet :**
+  👉 **[http://localhost:8080/random-hand-cards](http://localhost:8080/random-hand-cards)**
+* **Redirection racine :**
+  👉 **[http://localhost:8080/](http://localhost:8080/)** (redirige automatiquement en HTTP 302 vers `/random-hand-cards`)
+* **Endpoint API REST (JSON) :**
+  👉 **[http://localhost:8080/api/random-hand-cards](http://localhost:8080/api/random-hand-cards)**
+
+---
+
+## 9. Gestion des Conflits de Port (Port 8080 occupé)
+
+Le port par défaut configuré dans `src/main/resources/application.properties` est **strictement le port 8080** comme exigé par le sujet (`server.port=8080`).
+
+Si le port 8080 est déjà occupé sur votre machine par un autre service (par exemple IIS, Docker ou un agent local), vous pouvez lancer l'application sur un port alternatif (ex: **8081**) **sans modifier les fichiers du projet** :
+
+### Option A — En ligne de commande avec Spring Boot :
+```cmd
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
+```
+
+### Option B — Avec le fichier JAR exécutable :
+```cmd
+java -jar target/card-game-1.0.0.jar --server.port=8081
+```
+
+Vous accéderez alors à l'application via : **[http://localhost:8081/random-hand-cards](http://localhost:8081/random-hand-cards)**.
+
+---
+
+## 10. Couverture des Tests Automatisés (19 Tests Réussis)
+
+La suite de tests automatisés valide 100% des exigences fonctionnelles et techniques :
+
+### Tests unitaires du Service (`CardServiceTest` - 13 tests) :
+1. `testPackContainsExactly52Cards` : Le paquet complet contient exactement 52 cartes.
+2. `testAll52CardsAreUnique` : Toutes les 52 cartes sont distinctes (aucun doublon).
+3. `testEachSuitHas13Cards` : Exactement 13 cartes par couleur (produit cartésien 4x13).
+4. `testShufflePreservesAllCards` : Le mélange conserve l'intégralité des 52 cartes d'origine.
+5. `testDrawHandReturnsExactly10Cards` : Le tirage retourne exactement 10 cartes.
+6. `testHandCardsAreUnique` : Les 10 cartes tirées sont uniques (tirage sans remise).
+7. `testSortHandDeterministicOrder` : Tri déterministe sur un jeu de cartes prédéfini (Carreau, Cœur, Pique, Trèfle puis As à Roi).
+8. `testSortDoesNotMutateOriginalAndPreservesCards` : La main d'origine reste intacte (non-mutation) et la main triée contient les mêmes cartes.
+9. `testMultipleRoundsValidity` : Répétition de 5 manches successives avec validation de l'ordre.
+10. `testInvalidDrawCountThrowsException` : Gestion d'erreurs sur les tirages invalides (0, négatif, > 52, paquet nul).
+11. `testPackValidationRejectsInvalidData` : Rejet des paquets nuls, de taille anormale ou comportant des doublons.
+12. `testSortHandNullThrowsException` : Rejet d'une main nulle au tri.
+13. `testShuffleNullOrEmptyThrowsException` : Rejet d'une liste nulle ou vide au mélange.
+
+### Tests d'intégration du Contrôleur Web (`CardControllerTest` - 3 tests) :
+14. `testRootRedirectsToRandomHandCards` : Redirection HTTP 302 de `/` vers `/random-hand-cards`.
+15. `testGetRandomHandCardsReturnsViewWithModel` : Vérification du code 200, du nom de la vue et des attributs du modèle (10 cartes aléatoires, 10 cartes triées, 52 cartes).
+16. `testGetRandomHandCardsJsonEndpoint` : Vérification de l'endpoint JSON (`fullDeck`, `randomHand`, `sortedHand`).
+
+### Tests d'intégration de la Gestion d'Erreurs (`GlobalExceptionHandlerTest` - 3 tests) :
+17. `testHtmlErrorHandling` : Requête HTML avec `CardGameException` &rarr; statut HTTP 400 Bad Request, vue `error` et attribut `apiError`.
+18. `testJsonCardGameExceptionHandling` : Requête JSON avec `CardGameException` &rarr; statut HTTP 400 Bad Request avec JSON `ApiError` complet.
+19. `testUnexpectedExceptionHandling` : Exception non gérée &rarr; statut HTTP 500 Internal Server Error avec JSON `ApiError`.
+
+---
+
+## 11. Gestion Centralisée des Erreurs (`ApiError`)
+
+Conformément au sujet, toute anomalie est capturée par la classe `GlobalExceptionHandler` (`@ControllerAdvice`) :
+* Les requêtes de navigateur (HTML) affichent une page d'erreur conviviale `error.html` avec les détails de l'erreur et un lien de retour.
+* Les requêtes API (ou avec en-tête `Accept: application/json`) reçoivent une charge utile JSON standardisée :
+
+```json
+{
+  "timestamp": "2026-10-15T02:22:15.123",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Le nombre de cartes à tirer doit être supérieur à 0",
+  "path": "/api/random-hand-cards"
+}
+```

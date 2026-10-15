@@ -53,6 +53,9 @@ public class Pack {
      * Valide qu'un paquet contient exactement 52 cartes sans aucun doublon.
      */
     public static void validatePack(List<Card> cardsToValidate) {
+        if (cardsToValidate == null) {
+            throw new IllegalArgumentException("La liste de cartes ne peut pas être nulle");
+        }
         if (cardsToValidate.size() != STANDARD_PACK_SIZE) {
             throw new IllegalStateException("Le paquet doit contenir exactement " 
                     + STANDARD_PACK_SIZE + " cartes, mais en contient " + cardsToValidate.size());

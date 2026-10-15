@@ -1,137 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeu de Cartes - Test Technique</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-<div class="container">
-    <header>
-        <h1>🃏 Jeu de Cartes</h1>
-        <p class="subtitle">Simulation de distribution et tri d'une main de 10 cartes à jouer</p>
+    <div class="container">
+        <header>
+            <h1>🃏 Jeu de Cartes</h1>
+            <p class="subtitle">Simulation de distribution et tri d'une main de 10 cartes à jouer</p>
 
-        <div class="actions">
-            <a th:href="@{/random-hand-cards}" class="btn-primary" id="btn-generate">
-                <span>🔄</span>
-                <span>Générer une nouvelle main</span>
-            </a>
-        </div>
-
-        <div class="rules-banner">
-            <span>ℹ️</span>
-            <div>
-                <strong>Règle de tri appliquée :</strong>
-                1° Par couleur (<strong>Carreau ♦</strong> &rarr; <strong>Cœur ♥</strong> &rarr; <strong>Pique ♠</strong> &rarr; <strong>Trèfle ♣</strong>)
-                puis 2° Par valeur (<strong>As</strong> &rarr; <strong>2</strong>..<strong>10</strong> &rarr; <strong>Valet</strong> &rarr; <strong>Dame</strong> &rarr; <strong>Roi</strong>).
+            <div class="actions">
+                <a th:href="@{/random-hand-cards}" class="btn-primary" id="btn-generate">
+                    <span>🔄</span>
+                    <span>Générer une nouvelle main</span>
+                </a>
             </div>
-        </div>
-    </header>
 
-    <!-- 1. Main aléatoire (10 cartes non triées) -->
-    <section class="section-block random-hand" id="random-hand-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span>🎲</span>
-                <span>Main Aléatoire (non triée)</span>
-            </h2>
-            <span class="badge badge-amber" th:text="${handSize} + ' cartes tirées'">10 cartes tirées</span>
-        </div>
-
-        <div class="cards-grid hand-grid">
-            <div th:each="card : ${randomHand}"
-                 th:class="'card-item ' + ${card.color}"
-                 th:title="${card.displayName}">
-                <!-- Affichage d'image avec fallback automatique en CSS pur -->
-                <img th:src="@{${card.imagePath}}"
-                     th:alt="${card.displayName}"
-                     class="card-image"
-                     onerror="this.style.display='none'">
-                <div class="card-corner top-left">
-                    <span class="corner-rank" th:text="${card.rankLabel}">A</span>
-                    <span class="corner-symbol" th:text="${card.symbol}">♦</span>
-                </div>
-                <div class="card-center">
-                    <span class="center-symbol" th:text="${card.symbol}">♦</span>
-                </div>
-                <div class="card-corner bottom-right">
-                    <span class="corner-rank" th:text="${card.rankLabel}">A</span>
-                    <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+            <div class="rules-banner">
+                <span>ℹ️</span>
+                <div>
+                    <strong>Règle de tri appliquée :</strong>
+                    1° Par couleur (<strong>Carreau ♦</strong> &rarr; <strong>Cœur ♥</strong> &rarr; <strong>Pique ♠</strong> &rarr; <strong>Trèfle ♣</strong>)
+                    puis 2° Par valeur (<strong>As</strong> &rarr; <strong>2</strong>..<strong>10</strong> &rarr; <strong>Valet</strong> &rarr; <strong>Dame</strong> &rarr; <strong>Roi</strong>).
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- 2. Main triée (10 cartes triées) -->
-    <section class="section-block sorted-hand" id="sorted-hand-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span>✨</span>
-                <span>Main Triée (d'abord par couleur, puis par valeur)</span>
-            </h2>
-            <span class="badge badge-green">Mêmes 10 cartes triées</span>
-        </div>
+            <nav class="section-nav" aria-label="Navigation rapide">
+                <a href="#full-deck-section" class="nav-badge">📦 1. Paquet complet (52 cartes)</a>
+                <a href="#random-hand-section" class="nav-badge">🎲 2. Main aléatoire (10 cartes)</a>
+                <a href="#sorted-hand-section" class="nav-badge">✨ 3. Main triée (10 cartes)</a>
+            </nav>
+        </header>
 
-        <div class="cards-grid hand-grid">
-            <div th:each="card : ${sortedHand}"
-                 th:class="'card-item ' + ${card.color}"
-                 th:title="${card.displayName}">
-                <img th:src="@{${card.imagePath}}"
-                     th:alt="${card.displayName}"
-                     class="card-image"
-                     onerror="this.style.display='none'">
-                <div class="card-corner top-left">
-                    <span class="corner-rank" th:text="${card.rankLabel}">A</span>
-                    <span class="corner-symbol" th:text="${card.symbol}">♦</span>
-                </div>
-                <div class="card-center">
-                    <span class="center-symbol" th:text="${card.symbol}">♦</span>
-                </div>
-                <div class="card-corner bottom-right">
-                    <span class="corner-rank" th:text="${card.rankLabel}">A</span>
-                    <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+        <!-- 1. Paquet complet (52 cartes) -->
+        <section class="section-block full-deck" id="full-deck-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span>📦</span>
+                    <span>1. Paquet Complet (Pack - 52 cartes)</span>
+                </h2>
+                <span class="badge badge-indigo" th:text="${totalCards} + ' cartes (produit cartésien 4x13)'">52 cartes</span>
+            </div>
+
+            <div class="cards-grid">
+                <div th:each="card : ${fullDeck}" th:class="'card-item ' + ${card.color}"
+                    th:title="${card.displayName}">
+                    <img th:src="@{${card.imagePath}}" th:alt="${card.displayName}" class="card-image"
+                        onerror="this.style.display='none'">
+                    <div class="card-corner top-left">
+                        <span class="corner-rank" th:text="${card.rankLabel}">A</span>
+                        <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                    <div class="card-center">
+                        <span class="center-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                    <div class="card-corner bottom-right">
+                        <span class="corner-rank" th:text="${card.rankLabel}">A</span>
+                        <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 3. Paquet complet (52 cartes) -->
-    <section class="section-block full-deck" id="full-deck-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span>📦</span>
-                <span>Paquet Complet (Pack)</span>
-            </h2>
-            <span class="badge badge-indigo" th:text="${totalCards} + ' cartes (produit cartésien 4x13)'">52 cartes</span>
-        </div>
+        <!-- 2. Main aléatoire (10 cartes non triées) -->
+        <section class="section-block random-hand" id="random-hand-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span>🎲</span>
+                    <span>2. Main Aléatoire (10 cartes tirées sans remise)</span>
+                </h2>
+                <span class="badge badge-amber" th:text="${handSize} + ' cartes tirées'">10 cartes tirées</span>
+            </div>
 
-        <div class="cards-grid">
-            <div th:each="card : ${fullDeck}"
-                 th:class="'card-item ' + ${card.color}"
-                 th:title="${card.displayName}">
-                <img th:src="@{${card.imagePath}}"
-                     th:alt="${card.displayName}"
-                     class="card-image"
-                     onerror="this.style.display='none'">
-                <div class="card-corner top-left">
-                    <span class="corner-rank" th:text="${card.rankLabel}">A</span>
-                    <span class="corner-symbol" th:text="${card.symbol}">♦</span>
-                </div>
-                <div class="card-center">
-                    <span class="center-symbol" th:text="${card.symbol}">♦</span>
-                </div>
-                <div class="card-corner bottom-right">
-                    <span class="corner-rank" th:text="${card.rankLabel}">A</span>
-                    <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+            <div class="cards-grid hand-grid">
+                <div th:each="card : ${randomHand}" th:class="'card-item ' + ${card.color}"
+                    th:title="${card.displayName}">
+                    <img th:src="@{${card.imagePath}}" th:alt="${card.displayName}" class="card-image"
+                        onerror="this.style.display='none'">
+                    <div class="card-corner top-left">
+                        <span class="corner-rank" th:text="${card.rankLabel}">A</span>
+                        <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                    <div class="card-center">
+                        <span class="center-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                    <div class="card-corner bottom-right">
+                        <span class="corner-rank" th:text="${card.rankLabel}">A</span>
+                        <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <p>Application développée pour le Test Technique Java Spring Boot — Candidat : Aymen ZAGNOUNI</p>
-    </footer>
-</div>
+        <!-- 3. Main triée (10 cartes triées) -->
+        <section class="section-block sorted-hand" id="sorted-hand-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span>✨</span>
+                    <span>3. Main Triée (copie indépendante triée par couleur puis valeur)</span>
+                </h2>
+                <span class="badge badge-green">Mêmes 10 cartes triées</span>
+            </div>
+
+            <div class="cards-grid hand-grid">
+                <div th:each="card : ${sortedHand}" th:class="'card-item ' + ${card.color}"
+                    th:title="${card.displayName}">
+                    <img th:src="@{${card.imagePath}}" th:alt="${card.displayName}" class="card-image"
+                        onerror="this.style.display='none'">
+                    <div class="card-corner top-left">
+                        <span class="corner-rank" th:text="${card.rankLabel}">A</span>
+                        <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                    <div class="card-center">
+                        <span class="center-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                    <div class="card-corner bottom-right">
+                        <span class="corner-rank" th:text="${card.rankLabel}">A</span>
+                        <span class="corner-symbol" th:text="${card.symbol}">♦</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Application Jeu de Cartes — Test Technique Java Spring Boot</p>
+        </footer>
+    </div>
 </body>
+
 </html>

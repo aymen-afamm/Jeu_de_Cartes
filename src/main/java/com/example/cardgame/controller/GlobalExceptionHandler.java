@@ -3,25 +3,27 @@ package com.example.cardgame.controller;
 import com.example.cardgame.exception.CardGameException;
 import com.example.cardgame.model.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Gestionnaire centralisé des erreurs (requis par le sujet du test).
  * Renvoie une réponse structurée de type ApiError, soit en JSON pour les appels d'API,
  * soit injectée dans la page error.html pour les requêtes du navigateur.
+ * Définit explicitement le code HTTP (400 ou 500) pour ne jamais retourner un faux code 200.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CardGameException.class)
-    public Object handleCardGameException(CardGameException ex, HttpServletRequest request, Model model) {
+    public Object handleCardGameException(CardGameException ex, HttpServletRequest request, HttpServletResponse response, Model model) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        response.setStatus(status.value());
         ApiError apiError = new ApiError(
                 status.value(),
                 status.getReasonPhrase(),
@@ -38,8 +40,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public Object handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request, Model model) {
+    public Object handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request, HttpServletResponse response, Model model) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        response.setStatus(status.value());
         ApiError apiError = new ApiError(
                 status.value(),
                 status.getReasonPhrase(),
@@ -56,8 +59,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public Object handleGeneralException(Exception ex, HttpServletRequest request, Model model) {
+    public Object handleGeneralException(Exception ex, HttpServletRequest request, HttpServletResponse response, Model model) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        response.setStatus(status.value());
         ApiError apiError = new ApiError(
                 status.value(),
                 status.getReasonPhrase(),

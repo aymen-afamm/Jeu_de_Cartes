@@ -183,4 +183,31 @@ class CardServiceTest {
         assertThrows(CardGameException.class, () -> cardService.drawHand(cards, 100), "Tirer plus de cartes que le paquet doit lever une exception");
         assertThrows(CardGameException.class, () -> cardService.drawHand(null, 10), "Un paquet nul doit lever une exception");
     }
+
+    @Test
+    @DisplayName("11. Pack validation : rejette les listes nulles, taille incorrecte ou doublons")
+    void testPackValidationRejectsInvalidData() {
+        assertThrows(IllegalArgumentException.class, () -> Pack.validatePack(null), "Une liste nulle doit lever IllegalArgumentException");
+
+        List<Card> shortList = List.of(new Card(Suit.CARREAU, Rank.ACE));
+        assertThrows(IllegalStateException.class, () -> Pack.validatePack(shortList), "Une liste de moins de 52 cartes doit lever IllegalStateException");
+
+        // Liste de 52 cartes mais contenant un doublon
+        List<Card> duplicateList = new ArrayList<>(cardService.createPack().getCards());
+        duplicateList.set(1, duplicateList.get(0)); // Remplacer par un doublon
+        assertThrows(IllegalStateException.class, () -> Pack.validatePack(duplicateList), "Un paquet avec doublon doit lever IllegalStateException");
+    }
+
+    @Test
+    @DisplayName("12. Tri : une main nulle lève une exception")
+    void testSortHandNullThrowsException() {
+        assertThrows(CardGameException.class, () -> cardService.sortHand(null), "Trier une main nulle doit lever CardGameException");
+    }
+
+    @Test
+    @DisplayName("13. Mélange : une liste nulle ou vide lève une exception")
+    void testShuffleNullOrEmptyThrowsException() {
+        assertThrows(CardGameException.class, () -> cardService.shuffle(null), "Mélanger une liste nulle doit lever CardGameException");
+        assertThrows(CardGameException.class, () -> cardService.shuffle(List.of()), "Mélanger une liste vide doit lever CardGameException");
+    }
 }
